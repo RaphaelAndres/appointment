@@ -104,8 +104,8 @@ describe('Auth Endpoints', () => {
                     cpf: '101.202.303-11',
                 },
             });
-        expect(appointmentResponse.statusCode).toEqual(403)
-        expect(logoffResponse.body).toHaveProperty('message');
-        expect(logoffResponse.body.message).toEqual('No token provided')
+        expect(appointmentResponse.statusCode).toEqual(401)
+        expect(appointmentResponse.body).toHaveProperty('message');
+        expect(appointmentResponse.body.message).toEqual('Token is blacklisted')
     });
 });

@@ -1,63 +1,42 @@
 # Teste Conexa Backend
 
-## Instalação
-1. Clone o repositório:
-   ```sh
-   git clone <url-do-repositorio>
-   cd conexa-backend
-   ```
+## Instalação e Execução com Docker
 
-2. Instale as dependências:
-   ```sh
-   npm install
-   ```
+Este projeto pode ser executado facilmente usando o Docker.
 
-3. Configure as variáveis de ambiente no arquivo `.env`:
-   ```env
-   DB_HOST=localhost
-   DB_USER=root
-   DB_PASSWORD=sua_senha
-   DB_NAME=conexa
-   JWT_SECRET=sua_chave_secreta
-   PORT=3000
-   ```
+### 1. Clone o repositório
 
-4. Execute as migrações do banco de dados:
-```mysql
-CREATE TABLE doctors (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  email VARCHAR(255) NOT NULL,
-  hashedPassword VARCHAR(255) NOT NULL,
-  specialty VARCHAR(255) NOT NULL,
-  documentNumber VARCHAR(14) NOT NULL,
-  birthDate DATE NOT NULL,
-  phoneNumber VARCHAR(20) NOT NULL
-);
+Clone o repositório e entre na pasta do projeto:
 
-CREATE TABLE patients (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(255) NOT NULL,
-  documentNumber VARCHAR(14) NOT NULL 
-);
-
-CREATE TABLE appointments (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  appointmentTimestamp DATETIME NOT NULL,
-  patientId INT NOT NULL,
-  doctorId INT NOT NULL,
-  FOREIGN KEY (doctorId) REFERENCES doctors(id),
-  FOREIGN KEY (patientId) REFERENCES patients(id)
-);
-```
-
-## Execução
-Para iniciar o servidor:
 ```sh
-npm start
+git clone https://github.com/RaphaelAndres/appointment
+cd conexa-backend
 ```
 
-## Testes
-Para executar os testes:
-```sh
-npm test
+### 2. Configuração das variáveis de ambiente
+
+Crie um arquivo `.env` com as variáveis de ambiente para a configuração do banco de dados e outras configurações importantes. Você pode usar o arquivo `.env.example` como modelo.
+
+```env
+NODE_ENV=development
+DATABASE_HOST=db
+DATABASE_USER=root
+DATABASE_PASSWORD=password
+DATABASE_NAME=conexa
+REDIS_HOST=redis
+JWT_SECRET=secret_super_seguro
 ```
+
+### 3. Construir e subir os contêineres
+
+Para construir e iniciar os contêineres do Docker (incluindo a aplicação, MySQL e Redis), rode o seguinte comando:
+
+```sh
+docker-compose up --build
+```
+
+Esse comando vai criar os contêineres e configurar o ambiente de desenvolvimento. O servidor ficará disponível em [http://localhost:3000](http://localhost:3000).
+
+### 5. Acessando o servidor
+
+Após a execução do comando anterior, o servidor estará disponível na URL [http://localhost:3000](http://localhost:3000).

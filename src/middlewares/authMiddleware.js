@@ -28,10 +28,12 @@ const checkBlacklist = async (req, res) => {
         return res.status(401).json({ message: 'No token provided' });
     }
 
-    await redisClient.get(token, (err, data) => {
+    const redisResult = await redisClient.get(token, (err, data) => {
         if (err) throw err;
-        if (data) {
-            return res.status(401).json({ message: 'Token is blacklisted' });
-        }
+        if (data) return data;
     });
+
+    if (redisResult && redisResult === 'blacklisted') {
+        return res.status(401).json({ message: 'Token is blacklisted' });
+    }
 };

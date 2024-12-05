@@ -18,6 +18,7 @@ exports.signup = async (request, response) => {
         const doctorId = await Doctor.create(doctorData);
         response.status(201).json({ id: doctorId });
     } catch (error) {
+        console.log(error)
         response.status(500).json({ message: 'Error creating doctor', error });
     }
 };
@@ -27,7 +28,6 @@ exports.login = async (request, response) => {
 
     try {
         const doctor = await Doctor.findByEmail(email);
-
         if (!doctor || !(await bcryptjs.compare(password, doctor.hashedPassword))) {
             return response.status(401).json({ message: 'Invalid email or password' });
         }
@@ -35,6 +35,7 @@ exports.login = async (request, response) => {
         const token = jwt.sign({ id: doctor.id }, secret, { expiresIn });
         response.status(200).json({ token });
     } catch (error) {
+        console.log(error)
         response.status(500).json({ message: 'Error logging in', error });
     }
 };
