@@ -47,3 +47,10 @@ docker-compose up --build
 ### 4. Acessando o servidor
 
 Após a execução do comando anterior, o servidor estará disponível na URL [http://localhost:3000](http://localhost:3000).
+
+### 5. Testes
+Para executar os testes da aplicação (que também podem ser executados dentro do Docker), use o seguinte comando:
+
+```sh
+docker-compose exec app npm test
+```
