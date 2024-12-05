@@ -14,14 +14,6 @@ git clone https://github.com/RaphaelAndres/appointment
 cd conexa-backend
 ```
 
-### 2. Instale as dependências do projeto
-
-Para instalar as dependências de bibliotecas do projeto:
-
-```sh
-npm install
-```
-
 ### 2. Configuração das variáveis de ambiente
 
 Crie um arquivo `.env` com as variáveis de ambiente para a configuração do banco de dados e outras configurações importantes. Você pode usar o arquivo `.env.example` como modelo.
