@@ -3,6 +3,7 @@
 ## Instalação e Execução com Docker
 
 Este projeto pode ser executado facilmente usando o Docker.
+É necessário ter o node instalado em sua máquina.
 
 ### 1. Clone o repositório
 
@@ -11,6 +12,14 @@ Clone o repositório e entre na pasta do projeto:
 ```sh
 git clone https://github.com/RaphaelAndres/appointment
 cd conexa-backend
+```
+
+### 2. Instale as dependências do projeto
+
+Para instalar as dependências de bibliotecas do projeto:
+
+```sh
+npm install
 ```
 
 ### 2. Configuração das variáveis de ambiente
@@ -35,8 +44,6 @@ Para construir e iniciar os contêineres do Docker (incluindo a aplicação, MyS
 docker-compose up --build
 ```
 
-Esse comando vai criar os contêineres e configurar o ambiente de desenvolvimento. O servidor ficará disponível em [http://localhost:3000](http://localhost:3000).
-
-### 5. Acessando o servidor
+### 4. Acessando o servidor
 
 Após a execução do comando anterior, o servidor estará disponível na URL [http://localhost:3000](http://localhost:3000).
