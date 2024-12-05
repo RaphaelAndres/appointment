@@ -29,7 +29,7 @@ describe('Appointment Endpoints', () => {
         expect(response.body).toHaveProperty('id');
     });
 
-    it('should create fail to create an appointment with missing patient data', async () => {
+    it('should fail to create an appointment with missing patient data', async () => {
         const response = await request(app)
             .post('/api/v1/appointment')
             .set('Authorization', token)
@@ -44,7 +44,7 @@ describe('Appointment Endpoints', () => {
         expect(response.body.message).toEqual('Error creating patient');
     });
 
-    it('should create fail to create an appointment with a past timestamp', async () => {
+    it('should fail to create an appointment with a past timestamp', async () => {
         const response = await request(app)
             .post('/api/v1/appointment')
             .set('Authorization', token)
@@ -60,7 +60,7 @@ describe('Appointment Endpoints', () => {
         expect(response.body.message).toEqual('Cannot schedule in the past');
     });
 
-    it('should create fail to create an appointment with an invalid timestamp', async () => {
+    it('should fail to create an appointment with an invalid timestamp', async () => {
         const response = await request(app)
             .post('/api/v1/appointment')
             .set('Authorization', token)

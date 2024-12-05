@@ -6,7 +6,6 @@ const redisClient = require("../redisClient");
 
 exports.signup = async (request, response) => {
     const { email, senha: password, confirmacaoSenha: passwordConfirmation, especialidade: specialty, cpf: documentNumber, dataNascimento: birthDate, telefone: phoneNumber } = request.body;
-
     if (password !== passwordConfirmation) {
         return response.status(400).json({ message: 'Passwords do not match' });
     }
@@ -18,7 +17,6 @@ exports.signup = async (request, response) => {
         const doctorId = await Doctor.create(doctorData);
         response.status(201).json({ id: doctorId });
     } catch (error) {
-        console.log(error)
         response.status(500).json({ message: 'Error creating doctor', error });
     }
 };
@@ -35,7 +33,6 @@ exports.login = async (request, response) => {
         const token = jwt.sign({ id: doctor.id }, secret, { expiresIn });
         response.status(200).json({ token });
     } catch (error) {
-        console.log(error)
         response.status(500).json({ message: 'Error logging in', error });
     }
 };

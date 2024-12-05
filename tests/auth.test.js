@@ -2,79 +2,72 @@ const request = require('supertest');
 const app = require('../src/app');
 
 describe('Auth Endpoints', () => {
-    it('should signup a new doctor', async () => {
+    const signupData = [
+        ['should signup a new doctor', {
+            email: 'medico@conexa.com',
+            senha: '123456',
+            confirmacaoSenha: '123456',
+            especialidade: 'Cardiologista',
+            cpf: '101.202.303-11',
+            dataNascimento: '1980-03-10',
+            telefone: '(21) 3232-6565',
+        }, 201, 'id', null],
+        ['signup a new doctor should fail with mismatching passwords', {
+            email: 'medico@conexa.com',
+            senha: '123',
+            confirmacaoSenha: '123456',
+            especialidade: 'Cardiologista',
+            cpf: '101.202.303-11',
+            dataNascimento: '1980-03-10',
+            telefone: '(21) 3232-6565',
+        }, 400, 'message', 'Passwords do not match'],
+    ];
+
+    test.each(signupData)('%s', async (description, payload, expectedStatus, expectedProperty, expectedMessage) => {
         const response = await request(app)
             .post('/api/v1/signup')
-            .send({
-                email: 'medico@conexa.com',
-                senha: '123456',
-                confirmacaoSenha: '123456',
-                especialidade: 'Cardiologista',
-                cpf: '101.202.303-11',
-                dataNascimento: '1980-03-10',
-                telefone: '(21) 3232-6565',
-            });
-        expect(response.statusCode).toEqual(201);
-        expect(response.body).toHaveProperty('id');
+            .send(payload);
+        expect(response.statusCode).toEqual(expectedStatus);
+        expect(response.body).toHaveProperty(expectedProperty);
+        if (expectedMessage) {
+            expect(response.body.message).toEqual(expectedMessage);
+        }
     });
 
-    it('signup a new doctor should fail with mismatching passwords', async () => {
-        const response = await request(app)
-            .post('/api/v1/signup')
-            .send({
-                email: 'medico@conexa.com',
-                senha: '123',
-                confirmacaoSenha: '123456',
-                especialidade: 'Cardiologista',
-                cpf: '101.202.303-11',
-                dataNascimento: '1980-03-10',
-                telefone: '(21) 3232-6565',
-            });
-        expect(response.statusCode).toEqual(400);
-        expect(response.body).toHaveProperty('message');
-        expect(response.body.message).toEqual('Passwords do not match');
-    });
+    const loginData = [
+        ['should login an existing doctor', {
+            email: 'medico@conexa.com',
+            senha: '123456',
+        }, 200, 'token', null],
+        ['login an existing doctor with invalid params', {
+            email: 'medico@conexa.com',
+            senha: '123',
+        }, 401, 'message', 'Invalid email or password'],
+    ];
 
-    it('should login an existing doctor', async () => {
+    test.each(loginData)('%s', async (description, payload, expectedStatus, expectedProperty, expectedMessage) => {
         const response = await request(app)
             .post('/api/v1/login')
-            .send({
-                email: 'medico@conexa.com',
-                senha: '123456',
-            });
-        expect(response.statusCode).toEqual(200);
-        expect(response.body).toHaveProperty('token');
+            .send(payload);
+        expect(response.statusCode).toEqual(expectedStatus);
+        expect(response.body).toHaveProperty(expectedProperty);
+        if (expectedMessage) {
+            expect(response.body.message).toEqual(expectedMessage);
+        }
     });
 
-    it('login an existing doctor with invalid params', async () => {
-        const response = await request(app)
-            .post('/api/v1/login')
-            .send({
-                email: 'medico@conexa.com',
-                senha: '123',
-            });
-        expect(response.statusCode).toEqual(401);
-        expect(response.body).toHaveProperty('message');
-        expect(response.body.message).toEqual('Invalid email or password');
-    });
+    const tokenValidationData = [
+        ['validate token by requesting in an authentication required endpoint with invalid token', 'anything', 401, 'message', 'Failed to authenticate token'],
+        ['validate token by requesting in an authentication required endpoint without token', '', 401, 'message', 'No token provided'],
+    ];
 
-    it('validate token by requesting in an authentication required endpoint with invalid token', async () => {
+    test.each(tokenValidationData)('%s', async (description, token, expectedStatus, expectedProperty, expectedMessage) => {
         const response = await request(app)
             .get('/api/v1/logoff')
-            .set('Authorization', 'Bearer qualquerUm');
-
-        expect(response.statusCode).toEqual(401);
-        expect(response.body).toHaveProperty('message');
-        expect(response.body.message).toEqual('Failed to authenticate token')
-    });
-
-    it('validate token by requesting in an authentication required endpoint without token', async () => {
-        const response = await request(app)
-            .get('/api/v1/logoff');
-
-        expect(response.statusCode).toEqual(401);
-        expect(response.body).toHaveProperty('message');
-        expect(response.body.message).toEqual('No token provided')
+            .set('Authorization', token);
+        expect(response.statusCode).toEqual(expectedStatus);
+        expect(response.body).toHaveProperty(expectedProperty);
+        expect(response.body.message).toEqual(expectedMessage);
     });
 
     it('should logoff a logged in doctor', async () => {
@@ -92,7 +85,7 @@ describe('Auth Endpoints', () => {
 
         expect(logoffResponse.statusCode).toEqual(200);
         expect(logoffResponse.body).toHaveProperty('message');
-        expect(logoffResponse.body.message).toEqual('Logged off successfully')
+        expect(logoffResponse.body.message).toEqual('Logged off successfully');
 
         const appointmentResponse = await request(app)
             .post('/api/v1/appointment')
@@ -104,8 +97,8 @@ describe('Auth Endpoints', () => {
                     cpf: '101.202.303-11',
                 },
             });
-        expect(appointmentResponse.statusCode).toEqual(401)
+        expect(appointmentResponse.statusCode).toEqual(401);
         expect(appointmentResponse.body).toHaveProperty('message');
-        expect(appointmentResponse.body.message).toEqual('Token is blacklisted')
+        expect(appointmentResponse.body.message).toEqual('Token is blacklisted');
     });
 });

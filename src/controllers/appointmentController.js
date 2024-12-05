@@ -11,8 +11,9 @@ exports.createAppointment = async (request, response) => {
 
     const patientData = { name, documentNumber };
 
+    let patientId;
     try {
-        var patientId = await Patient.create(patientData);
+        patientId = await Patient.create(patientData);
     } catch (error) {
         return response.status(500).json({ message: 'Error creating patient', error });
     }
